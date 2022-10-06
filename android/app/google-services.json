@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "344737353064",
+    "project_id": "first1-app01-flutr01",
+    "storage_bucket": "first1-app01-flutr01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344737353064:android:b2a7d35e70b77b58571add",
+        "android_client_info": {
+          "package_name": "com.example.firstapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "344737353064-oimsqc3vqemjs41nqghk2ojh5laeqht3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCYRIedYOfIReIRdkONMqn6gARWFSetnd4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "344737353064-oimsqc3vqemjs41nqghk2ojh5laeqht3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "344737353064-2vmddt5ubno8ubqi6hgb5ufp2tanau9o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.firstapp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
