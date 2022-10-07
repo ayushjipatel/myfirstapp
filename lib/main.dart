@@ -28,6 +28,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/login/': (context) => const LogInView(),
         '/register/': (context) => const RegisterView(),
+        '/notes': (context) => const NoteView(),
       },
     );
   }
@@ -50,7 +51,7 @@ class HomePage extends StatelessWidget {
               if (user.emailVerified) {
                 return const NoteView();
               } else {
-                print('Please verify your email address');
+                devtools.log('Please verify your email address');
                 return const VerifyEmailView();
               }
             } else {
