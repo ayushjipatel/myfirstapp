@@ -1,6 +1,7 @@
 import 'package:firstapp/constants/routes.dart';
 import 'package:firstapp/enums/menu_action.dart';
 import 'package:firstapp/services/auth/auth_service.dart';
+import 'package:firstapp/services/crud/nodes_services.dart';
 import 'package:flutter/material.dart';
 
 class NoteView extends StatefulWidget {
@@ -11,6 +12,22 @@ class NoteView extends StatefulWidget {
 }
 
 class _NoteViewState extends State<NoteView> {
+  late final NoteService _noteService;
+  String get userEmail => AuthService.firebase().currentUser!.email!;
+
+  @override
+  void initState() {
+    _noteService = NoteService();
+    _noteService.open();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _noteService.close();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,17 +57,26 @@ class _NoteViewState extends State<NoteView> {
           )
         ],
       ),
-      body: Column(
-        children: [
-          TextButton(
-              onPressed: () {
-                //Navigator.of(context).pushNamedAndRemoveUntil(
-                //'/login/',
-                //(route) => false,
-                //);
-              },
-              child: const Text("logeed in ")),
-        ],
+      body: FutureBuilder(
+        future: _noteService.getOrCreateUser(email: userEmail),
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.done:
+              return StreamBuilder(
+                stream: _noteService.allnotes,
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return const Text('Waiting for notes');
+                    default:
+                      return const CircularProgressIndicator();
+                  }
+                },
+              );
+            default:
+              return const CircularProgressIndicator();
+          }
+        },
       ),
     );
   }
