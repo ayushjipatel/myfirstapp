@@ -1,5 +1,5 @@
 import 'package:firstapp/services/auth/auth_service.dart';
-import 'package:firstapp/services/crud/nodes_services.dart';
+import 'package:firstapp/services/crud/notes_services.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter/material.dart';
 
@@ -11,12 +11,12 @@ class NewNoteView extends StatefulWidget {
 
 class _NewNoteViewState extends State<NewNoteView> {
   DatabaseNote? _note;
-  late final NoteService _noteService;
+  late final NotesService _noteService;
   late final TextEditingController _textEditingController;
 
   @override
   void initState() {
-    _noteService = NoteService();
+    _noteService = NotesService();
     _textEditingController = TextEditingController();
     super.initState();
   }
@@ -96,6 +96,8 @@ class _NewNoteViewState extends State<NewNoteView> {
                 controller: _textEditingController,
                 keyboardType: TextInputType.multiline,
                 maxLines: null,
+                decoration: const InputDecoration(
+                    hintText: 'Start typing your notes Here'),
               );
             default:
               return const CircularProgressIndicator();

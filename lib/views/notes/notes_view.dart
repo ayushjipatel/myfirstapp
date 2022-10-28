@@ -1,7 +1,9 @@
+import 'dart:developer';
+
 import 'package:firstapp/constants/routes.dart';
 import 'package:firstapp/enums/menu_action.dart';
 import 'package:firstapp/services/auth/auth_service.dart';
-import 'package:firstapp/services/crud/nodes_services.dart';
+import 'package:firstapp/services/crud/notes_services.dart';
 import 'package:flutter/material.dart';
 
 class NoteView extends StatefulWidget {
@@ -12,20 +14,14 @@ class NoteView extends StatefulWidget {
 }
 
 class _NoteViewState extends State<NoteView> {
-  late final NoteService _noteService;
+  late final NotesService _noteService;
   String get userEmail => AuthService.firebase().currentUser!.email!;
 
   @override
   void initState() {
-    _noteService = NoteService();
+    _noteService = NotesService();
     _noteService.open();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _noteService.close();
-    super.dispose();
   }
 
   @override
@@ -69,12 +65,30 @@ class _NoteViewState extends State<NoteView> {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
               return StreamBuilder(
-                stream: _noteService.allnotes,
+                stream: _noteService.allNotes,
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
                     case ConnectionState.active:
-                      return const Text('Waiting for notes');
+                      if (snapshot.hasData) {
+                        final allNotes = snapshot.data as List<DatabaseNote>;
+                        return ListView.builder(
+                          itemCount: allNotes.length,
+                          itemBuilder: (context, index) {
+                            final note = allNotes[index];
+                            return ListTile(
+                              title: Text(
+                                note.text,
+                                maxLines: 1,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            );
+                          },
+                        );
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
                     default:
                       return const CircularProgressIndicator();
                   }
