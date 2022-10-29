@@ -6,14 +6,20 @@ import 'package:firstapp/services/cloud/cloud_storage_exceptions.dart';
 class FirebaseCloudStorage {
   final notes = FirebaseFirestore.instance.collection('notes');
 
+  Future<void> deleteNote({required String documentId}) async {
+    try {
+      await notes.doc(documentId).delete();
+    } catch (_) {
+      throw CouldNotDeleteNoteException();
+    }
+  }
+
   Future<void> updateNote({
     required String documentId,
     required String text,
   }) async {
     try {
-      notes.doc(documentId).update({
-        textFieldName: text,
-      });
+      await notes.doc(documentId).update({textFieldName: text});
     } catch (_) {
       throw CouldNotUpdateNoteException();
     }
@@ -26,9 +32,7 @@ class FirebaseCloudStorage {
                 .where((note) => note.ownerUserId == ownerUserId),
           );
 
-  Future<Iterable<CloudNote>> getNote({
-    required String ownerUserId,
-  }) async {
+  Future<Iterable<CloudNote>> getNote({required String ownerUserId}) async {
     try {
       return await notes
           .where(
@@ -38,13 +42,7 @@ class FirebaseCloudStorage {
           .get()
           .then(
             (value) => value.docs.map(
-              (doc) {
-                return CloudNote(
-                  ownerUserId: doc.id,
-                  documentId: doc.data()[ownerUserIdFieldName] as String,
-                  text: doc.data()[textFieldName] as String,
-                );
-              },
+              (doc) => CloudNote.fromSnapshot(doc),
             ),
           );
     } catch (e) {
@@ -52,11 +50,17 @@ class FirebaseCloudStorage {
     }
   }
 
-  void createNewNote({required String ownerUserId}) async {
-    await notes.add({
+  Future<CloudNote> createNewNote({required String ownerUserId}) async {
+    final document = await notes.add({
       ownerUserIdFieldName: ownerUserId,
       textFieldName: '',
     });
+    final fetchNote = await document.get();
+    return CloudNote(
+      ownerUserId: ownerUserId,
+      documentId: fetchNote.id,
+      text: '',
+    );
   }
 
   static final FirebaseCloudStorage _shared =

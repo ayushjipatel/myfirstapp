@@ -7,21 +7,22 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' show join;
 
-class NotesService {
+class FirebaseCloudStorage {
   Database? _db;
 
   List<DatabaseNote> _notes = [];
   DatabaseUser? _user;
 
-  static final NotesService _shared = NotesService._sharedInstance();
-  NotesService._sharedInstance() {
+  static final FirebaseCloudStorage _shared =
+      FirebaseCloudStorage._sharedInstance();
+  FirebaseCloudStorage._sharedInstance() {
     _notesStreamController = StreamController<List<DatabaseNote>>.broadcast(
       onListen: () {
         _notesStreamController.sink.add(_notes);
       },
     );
   }
-  factory NotesService() => _shared;
+  factory FirebaseCloudStorage() => _shared;
 
   late final StreamController<List<DatabaseNote>> _notesStreamController;
 
