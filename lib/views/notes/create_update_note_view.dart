@@ -2,7 +2,6 @@ import 'package:firstapp/services/auth/auth_service.dart';
 import 'package:firstapp/services/crud/notes_services.dart';
 import 'package:firstapp/utilities/generics/get_arguments.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 
 class CreateUpdateNoteView extends StatefulWidget {
   const CreateUpdateNoteView({super.key});
@@ -54,7 +53,7 @@ class _CreateUpdateNoteViewState extends State<CreateUpdateNoteView> {
     }
 
     final currentUser = AuthService.firebase().currentUser!;
-    final email = currentUser.email!;
+    final email = currentUser.email;
     final owner = await _noteService.getUser(email: email);
 
     final newNote = await _noteService.createNote(owner: owner);
